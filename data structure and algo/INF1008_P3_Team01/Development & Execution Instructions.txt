@@ -1,0 +1,241 @@
+Development and Execution Instructions
+1. Development Instructions
+This section explains how the application was developed, focusing on the multi-level linked list structure, traversal methods, and serialization techniques.
+
+1.1 Environment Setup
+To run this application, ensure you have the following installed:
+
+Software Requirements
+Programming Language: Python 3.x
+
+GUI Framework: Tkinter
+
+Libraries Used:
+
+json – For saving and loading the organization chart.
+tkinter – For the graphical user interface (GUI).
+collections.deque – For BFS traversal.
+os – For file handling.
+
+Installation Instructions
+No additional dependencies are required beyond Python’s standard library. However, if Tkinter is not installed, run:
+
+pip install tk
+
+1.2 Project Structure
+Your project consists of two main files:
+organization_chart_project/
+│── main.py  # GUI Implementation (Tkinter)
+│── org.py   # Organization Chart Logic (Multi-Level Linked List)
+│── organization_chart.json  # Serialized organization chart data (optional)
+
+1.3 Data Structure Design
+Our implementation uses a Multi-Level Linked List where each EmployeeNode represents an individual in the organization.
+
+EmployeeNode Structure
+Located in org.py:
+
+class EmployeeNode:
+    def __init__(self, emp_id, name, role):
+        self.emp_id = emp_id
+        self.name = name
+        self.role = role
+        self.next = None  # Pointer to next sibling (same level)
+        self.child = None  # Pointer to first subordinate
+        self.parent = None  # Pointer to the direct supervisor
+        self.last_child = None  # Pointer to last subordinate for fast insert
+
+next → Links employees at the same level (siblings).
+
+child → Links first subordinate (department hierarchy).
+
+parent → Stores the direct supervisor.
+
+Optimized Lookup Using a Dictionary
+The OrganizationChart class maintains a hash table (self.employees) for O(1) retrieval:
+
+self.employees = {}  # Fast access to EmployeeNodes by ID
+
+1.4 Core Functionalities
+1.4.1 Adding an Employee
+
+Implemented in org.py:
+
+def add_employee(self, parent_id, emp_id, name, role):
+    if emp_id in self.employees:
+        messagebox.showerror("Error", "Employee ID already exists.")
+        return
+    new_employee = EmployeeNode(emp_id, name, role)
+    parent = self.employees.get(parent_id)
+    if parent:
+        new_employee.parent = parent
+        if not parent.child:
+            parent.child = new_employee
+        else:
+            parent.last_child.next = new_employee
+        parent.last_child = new_employee
+    self.employees[emp_id] = new_employee
+Handles CEO insertion separately (if emp_id == 1).
+
+Links new employees to their supervisor (parent_id).
+
+Ensures correct placement within the linked list.
+
+1.4.2 Deleting an Employee
+Implemented in org.py:
+
+def permanently_delete_employee(self, emp_id):
+    employee = self.employees.get(emp_id)
+    if not employee:
+        messagebox.showerror("Error", "Employee not found.")
+        return
+    if employee == self.head:  # CEO deletion case
+        self.head = None
+        self.employees.clear()
+        return
+    parent = employee.parent
+    if parent and parent.child == employee:
+        parent.child = employee.next
+    elif parent:
+        current = parent.child
+        while current and current.next != employee:
+            current = current.next
+        if current:
+            current.next = employee.next
+    del self.employees[emp_id]
+Handles CEO deletion carefully.
+
+Reassigns subordinates before deletion.
+
+Removes employee from self.employees dictionary.
+
+1.4.3 Traversing the Organization Chart
+Our implementation supports Breadth-First Search (BFS) traversal for structured output.
+
+def bfs_traversal(self):
+    if not self.head:
+        print("Organization is empty.")
+        return
+    queue = deque([self.head])
+    while queue:
+        node = queue.popleft()
+        print(f"{node.name} ({node.role})")
+        child = node.child
+        while child:
+            queue.append(child)
+            child = child.next
+BFS is used to traverse level by level.
+
+Queue (deque) ensures proper order.
+
+1.4.4 Saving & Loading the Organization Chart
+Our application supports serialization using JSON.
+
+Saving the Organization Chart
+
+def save_to_json(self, filename="organization_chart.json"):
+    data = {
+        "hierarchy": self._serialize_employee(self.head)
+    }
+    with open(filename, "w") as file:
+        json.dump(data, file, indent=4)
+Converts the multi-level linked list to JSON format.
+
+Allows persistent storage of the organization hierarchy.
+
+Loading the Organization Chart
+
+def load_from_json(self, filename="organization_chart.json"):
+    with open(filename, "r") as file:
+        data = json.load(file)
+        self.head = self._deserialize_employee(data["hierarchy"])
+Restores previously saved organization structures.
+
+2. Execution Instructions
+This section explains how to run and use the application.
+
+2.1 Running the Application
+Step 1: Run the GUI
+Execute the main.py script:
+
+python main.py
+This will open the GUI, allowing users to manage the organization chart.
+
+2.2 Using the GUI
+Step 2: Adding Employees
+Enter:
+
+Parent ID (leave blank for CEO).
+
+Employee ID (must be unique).
+
+Name & Role.
+
+Click "➕ Add Employee".
+
+Step 3: Managing Employees
+Vacate Position (❌ Vacate Position) – Marks a position as vacant.
+
+Delete Employee (🗑️ Permanent Delete) – Permanently removes an employee.
+
+Step 4: Displaying the Organization Hierarchy
+Click "📊 Display Hierarchy" to view current employees.
+
+Step 5: Saving & Loading Organization
+Save Organization (💾 Save) – Stores the hierarchy in JSON format.
+
+Load Organization (📂 Load) – Restores the last saved state.
+
+3. Example Execution
+3.1 Adding Employees
+Parent ID	Employee ID	Name	Role
+-	1	Alice	CEO
+1	2	Bob	Manager
+1	3	Eve	HR Head
+2	4	John	Engineer
+3.2 Expected BFS Output
+
+Alice (CEO)
+├── Bob (Manager)
+│   ├── John (Engineer)
+└── Eve (HR Head)
+
+3.3 Expected JSON Save Format
+
+{
+    "hierarchy": {
+        "emp_id": 1,
+        "name": "Alice",
+        "role": "CEO",
+        "subordinates": [
+            {
+                "emp_id": 2,
+                "name": "Bob",
+                "role": "Manager",
+                "subordinates": [
+                    {
+                        "emp_id": 4,
+                        "name": "John",
+                        "role": "Engineer",
+                        "subordinates": []
+                    }
+                ]
+            },
+            {
+                "emp_id": 3,
+                "name": "Eve",
+                "role": "HR Head",
+                "subordinates": []
+            }
+        ]
+    }
+}
+
+Conclusion
+The Multi-Level Linked List stores the organization structure.
+
+Optimized lookups using a dictionary (self.employees).
+
+GUI for user-friendly management (Tkinter).
+
+Serialization ensures persistence across runs.

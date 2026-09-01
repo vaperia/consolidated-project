@@ -1,0 +1,10 @@
+node_modules/ 
+dist/ 
+.vite/ 
+# Ignore Visual Studio cache and temp files
+.vs/
+*.vscode/
+*.user
+*.suo
+
+

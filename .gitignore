@@ -1,0 +1,47 @@
+# Dependencies
+node_modules/
+
+# Python cache / environments
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.venv/
+env/
+
+# Build / generated folders
+build/
+dist/
+install/
+log/
+
+# Archives
+*.zip
+*.rar
+*.7z
+
+# Large videos
+*.mp4
+*.mov
+*.avi
+*.mkv
+
+# Environment / secrets
+.env
+.env.*
+*.json
+!package.json
+!package-lock.json
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Firebase / Google service account credentials
+*-firebase-adminsdk-*.json
+*service-account*.json
+*service_account*.json

@@ -1,0 +1,183 @@
+/* ###*B*###
+ * Erika Enterprise, version 3
+ * 
+ * Copyright (C) 2017 - 2019 Evidence s.r.l.
+ * 
+ * This program is distributed under the terms of the GNU General Public License
+ * ###*E*### */
+
+CPU mySystem {
+
+  OS myOs {
+    // [Daryl] contribution - OS, CPU, MCU, kernel configuration
+    EE_OPT = "OS_EE_APPL_BUILD_DEBUG";
+    EE_OPT = "OS_EE_BUILD_DEBUG";
+
+    STARTUPHOOK = TRUE;
+    USERESSCHEDULER = TRUE;
+
+    CPU_DATA = AVR8 {
+      MULTI_STACK = TRUE;
+      IDLEHOOK = TRUE { HOOKNAME = "idle_hook"; };
+    };
+
+    MCU_DATA = MEGA { MODEL = MEGA_328p; };
+
+    LIB = ARDUINO {
+      SDK_BOARD = UNO;
+      VARIANT = CC { VERSION = "1.8.15"; };
+      STAND_ALONE = TRUE;
+    };
+
+    KERNEL_TYPE = OSEK {
+      CLASS = ECC2;
+    };
+  };
+
+  APPDATA myApp {
+    // [Daryl] contribution - Adding source files to build
+    APP_SRC  = "code.cpp";
+    APP_SRC  = "task.cpp";
+    APP_SRC  = "debug.cpp";
+
+    /* Third-party drivers */
+    APP_SRC  = "ServoTimer2.cpp";
+    APP_SRC  = "LiquidCrystal.cpp";
+  };
+
+  /* RESOURCES for mutual exclusion */
+  // [Valerie] contribution - RESOURCE definitions
+  RESOURCE SensorDataRes {
+    RESOURCEPROPERTY = STANDARD;
+  };
+  
+  RESOURCE ServoControlRes {
+    RESOURCEPROPERTY = STANDARD;
+  };
+  
+  RESOURCE LEDControlRes {
+    RESOURCEPROPERTY = STANDARD;
+  };
+  
+  RESOURCE DisplayRes {
+    RESOURCEPROPERTY = STANDARD;
+  };
+
+  /* EVENTS for task synchronization */
+  // [Ryan] contribution - EVENT definitions
+  EVENT SensorDataReadyEvent;
+  EVENT ServoCommandEvent;
+  EVENT LEDCommandEvent;
+
+  // [Rein] contribution - COUNTER SystemCounter configuration
+  COUNTER SystemCounter {
+    MINCYCLE = 1;
+    MAXALLOWEDVALUE = 65535;
+    TICKSPERBASE = 1;
+    TYPE = HARDWARE {
+      SYSTEM_TIMER = TRUE;
+      PRIORITY     = 1;
+      DEVICE       = "TIMER1_COMPA";
+    };
+    SECONDSPERTICK = 0.001;
+  };
+
+  /* ALARM 1: Triggers SensorTask every 1000ms */
+  // [Rein] contribution - ALARM SensorAlarm
+  ALARM SensorAlarm {
+    COUNTER = SystemCounter;
+    ACTION  = ACTIVATETASK { TASK = SensorTask; };
+    AUTOSTART = TRUE {
+      ALARMTIME = 1000;
+      CYCLETIME = 1000;
+    };
+  };
+
+  /* ALARM 2: Triggers DisplayTask every 1000ms */
+  // [Zion] contribution - ALARM DisplayAlarm
+  ALARM DisplayAlarm {
+    COUNTER = SystemCounter;
+    ACTION  = ACTIVATETASK { TASK = DisplayTask; };
+    AUTOSTART = TRUE {
+      ALARMTIME = 1000;
+      CYCLETIME = 1000;
+    };
+  };
+  
+  /* ClockTask every 1000 ms = 1 second */
+  // [Zion] contribution - ALARM ClockAlarm
+  ALARM ClockAlarm {
+    COUNTER = SystemCounter;
+    ACTION  = ACTIVATETASK { TASK = ClockTask; };
+    AUTOSTART = TRUE {
+      ALARMTIME = 1000;
+      CYCLETIME = 1000;
+    };
+  };
+
+  /* TASK 1: HIGHEST PRIORITY - Sensor reading and calculation */
+  /* Justification: Must read sensors accurately without interruption */
+  // [Valerie] contribution - SensorTask configuration
+  TASK SensorTask {
+    PRIORITY = 5;
+    SCHEDULE = FULL;
+    AUTOSTART = FALSE;
+    STACK = SHARED;
+    ACTIVATION = 1;
+    RESOURCE = SensorDataRes;
+    /* Sets events to notify dependent tasks */
+  };
+
+  /* TASK 2: HIGH PRIORITY - Servo control (mechanical actuation) */
+  /* Justification: Servo movement requires precise timing, separated from LEDs */
+  // [Ryan] contribution - ServoControlTask configuration
+  TASK ServoControlTask {
+    PRIORITY = 4;
+    SCHEDULE = FULL;
+    AUTOSTART = TRUE;
+    STACK = PRIVATE { SIZE = 128; };
+    ACTIVATION = 1;
+    EVENT = ServoCommandEvent;
+    RESOURCE = ServoControlRes;
+    RESOURCE = SensorDataRes;
+  };
+
+  /* TASK 3: MEDIUM PRIORITY - LED control (light actuation) */
+  /* Justification: LED control is separate from servo for modularity and testing */
+  // [Rein] contribution - LEDControlTask configuration
+  TASK LEDControlTask {
+    PRIORITY = 3;
+    SCHEDULE = FULL;
+    AUTOSTART = TRUE;
+    STACK = PRIVATE { SIZE = 128; };
+    ACTIVATION = 1;
+    EVENT = LEDCommandEvent;
+    RESOURCE = LEDControlRes;
+    RESOURCE = SensorDataRes;
+  };
+
+  /* TASK 4: LOW PRIORITY - Display update (non-critical) */
+  /* Justification: Display is informational only, can be lower priority */
+  // [Zion] contribution - DisplayTask configuration
+  TASK DisplayTask {
+    PRIORITY = 2;
+    SCHEDULE = FULL;
+    AUTOSTART = FALSE;
+    STACK = SHARED;
+    ACTIVATION = 1;
+    RESOURCE = DisplayRes;
+    RESOURCE = SensorDataRes;
+  };
+
+  /* TASK 5: LOWEST PRIORITY - Optional clock module (background task) */
+  /* Justification: Clock runs independently, lowest priority as it's optional */
+  // [Zion] contribution - ClockTask configuration
+  TASK ClockTask {
+    PRIORITY = 1;
+    SCHEDULE = FULL;
+    AUTOSTART = TRUE;
+    STACK = SHARED;
+    ACTIVATION = 1;
+  };
+
+};

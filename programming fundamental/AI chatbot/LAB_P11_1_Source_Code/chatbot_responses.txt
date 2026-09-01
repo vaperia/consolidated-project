@@ -1,0 +1,63 @@
+You: hi
+Yuna: Hello! How can I assist you today?
+
+You: hi
+Yuna: Hello! How can I assist you today?
+
+You: hi
+Yuna: Sorry, I couldn't get a response from the chatbot.
+
+You: hi
+Yuna: Sorry, I couldn't get a response from the chatbot.
+
+You: hi
+Yuna: Arrr! Me brain's gone foggy. Can't give ye a proper answer, ye bilge rat!
+
+You: hi
+Yuna: Arrr! Me brain's gone foggy. Can't give ye a proper answer, ye bilge rat!
+
+You: hi
+Yuna: Arr, greetings, ya salty sea dog! In proper pirate tongue, we be respondin' with a hearty 'Ahoy, matey!' to the landlubber's 'hi'. Now, hoist the main sail, there be treasures to plunder!
+
+You: jgfyu
+Yuna: Arr matey! That be soundin' like a load o' bilge rat nonsense to me ol' sea ears. If ye be meanin' to communicate, ye'll have to use words me pirate brain can fathom. Yarr!
+
+You: hi
+Yuna: Arrr, that be simple lingo, matey. 'Hi' be the same in both pirate and landlubber talk. It be a greetin' sayin' hello to ye. Now, get back to swabbin' the deck, ye scallywag!
+
+You: hello hello
+Yuna: Arr matey! In response to that 'hello hello', we pirates would be sayin', "Avast ye! Twice greeted, twice the cheer!" Now, what be yer business here on me ship, ye scurvy sea dog?
+
+You: hello
+Yuna: Yarr! The sea dog greets ye with a hearty 'hello' back! What be yer business on me galleon, ye salty sea dog?
+
+You: who is Ryan
+Yuna: Arr, depends on which Ryan ye be speakin' 'bout, matey. There be many a Ryan sailin' the seven seas. Ye'll need to be more specific, else I'll be as lost as a drunken sailor on guard duty. Give me more to work with, ye scurvy dog!
+
+You: hi
+Yuna: Arr matey! In the common tongue, that'd be a simple 'hello'. Back at 'em, ye'd say 'Ahoy there!' Keep yer cutlass sharp and yer wits sharper!
+
+You: hello
+Yuna: Avast ye! Ye be sayin' "hello" back to th' landlubber, an' add a hearty "Ahoy, matey!" to show 'em ye be a true seadog. Nothin' like a bit o' friendly banter to warm up th' conversation, arr!
+
+You: hi
+Yuna: Arr matey! Yarr response to that be simple. Give 'em a hearty, "Ahoy, matey! How be the winds blowin' for ye this fine day?" Ye always address a fellow sea dog with respect, ye hear? Now, swab the deck and keep yarr eyes on the horizon!
+
+You: Hi
+Yuna: Arr matey! To that landlubber's 'Hi', ye can respond with a hearty 'Ahoy there, ye salty sea dog! What brings ye to these briny deeps?' Always remember, every conversation's an opportunity to swap tales and share a bit o' rum, aye?
+
+You: How to make an egg
+Yuna: Arr matey, ye be wantin' to learn the art of cookin' an egg, eh? Well, here's how we do it on me ship:
+
+1. Find yerself an egg, fresh from the chicken if ye can manage it.
+2. Plonk it in a pot full o' water, enough to cover the egg completely.
+3. Bring the water to a hearty boil. Once it be boilin', let it do so for about 10 minutes.
+4. After that, use a hook or somethin' to fish out the egg, but be careful not to burn yerself! Let it cool for a bit.
+5. Once it's cool enough to handle, give it a good
+
+You: Gimme egg
+Yuna: Arr matey! If a landlubber be demandin' an egg, I'd be tellin' 'em: "Ye barnacle-covered bilge rat, ain't no eggs aboard this ship! We be feastin' on hardtack and salted pork, not dainty hen fruit. Now, be off with ye before I make ye walk the plank!"
+
+You: ?
+Yuna: Arr matey, that symbol be known as a question mark. It be used by ye landlubbers an' pirates alike to signify a query or a doubt. If ye be seein' that mark at the end of a sentence, 'tis a signal that the speaker be seekin' an answer. Any more inquiries ye have, ye salty sea dog?
+

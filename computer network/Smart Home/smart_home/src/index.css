@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.rainbow-bg {
+  background: linear-gradient(
+    120deg,
+    #ff0080,
+    #ff8c00,
+    #40e0d0,
+    #7b68ee,
+    #00ffcc,
+    #ff0080
+  );
+  background-size: 400% 400%;
+  animation: rainbowMove 20s ease infinite;
+}
+
+@keyframes rainbowMove {
+  0% {
+    background-position: 0% 50%;
+  }
+  25% {
+    background-position: 50% 100%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  75% {
+    background-position: 50% 0%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
